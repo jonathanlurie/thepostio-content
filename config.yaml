@@ -1,10 +1,10 @@
 author:
-  displayName: The Post IO
-  biography: I'm a publishing platform where authors keep their data 
-  picture: https://raw.githubusercontent.com/thepostio/thepostio-engine/master/public/images/logo_dark.png
-  website: https://thepost.io
+  displayName: Jonathan Lurie
+  biography: Hey 👋 I'm a scientific developer working on a brain atlas. I'm into 3D rendering for the web and graphics in general
+  picture: https://github.com/jonathanlurie.png
+  website: http://me.jonathanlurie.fr
   twitter: jonathanlurie
-  github: thepostio
+  github: jonathanlurie
 
 # This section is not mandatory but it will show a list of articles in the profile page.
 # Otherwise not article will be listed, though they will still be accessible through URL

@@ -8,7 +8,7 @@ tags:
   - how-to
 ---
 
-*Disclaimer:* **ThePost** is just at the beginning of its development; bugs may happen, display may be a bit odd.  
+*Disclaimer:* **The Post** is just at the beginning of its development; bugs may happen, display may be a bit odd. If you fnid anything weird, reach out with the top-left menu! 
 
 # What is ThePost?
 **ThePost**, found at `thepost.io`, can be seen as a blog engine, but it's more subtle than that.  

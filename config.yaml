@@ -6,10 +6,5 @@ author:
   twitter: jonathanlurie
   github: jonathanlurie
 
-# This section is not mandatory but it will show a list of articles in the profile page.
-# Otherwise not article will be listed, though they will still be accessible through URL
 articles:
-  - getting-started
-  - dummy-article
-  - corrupted-article
-  - some-code
+  - scientific-developer

@@ -13,7 +13,7 @@ tags:
 
 
 # What kind of situation are we talking about?
-In the [previous article](/jonathanlurie/scientific-developer), I have described roughly what it means to be working as a scientific developer, it was more about the *human aspect* and the soft skills, without getting too technical. Now is the time to get a bit deeper (but still, don't expect any code in this article!). Then, this article can be used as cheat sheet (mainly for all the links) or just as introductory material for a developer who would like to get into scientific software.
+In the [previous article](/jonathanlurie/scientific-developer), I have described roughly what it means to be working as a scientific developer, it was more about the *human aspect* and the soft skills, without getting too technical. Now is the time to get a bit deeper (but still, don't expect any code in this article!). Then, this article can be used as a cheatsheet (mainly for all the links) or just as introductory material for a developer who would like to get into scientific software.
 
 The example I am going to use is one of the projects I am currently working on: a brain atlas.  
 One may think *"oh, just a few brain meshes displayed with WebGL and you're good to go!"*, and yes, that's a part of it, but it's only the tip of the iceberg.  
@@ -96,7 +96,7 @@ This list could grow exponentially based on the number of developers contributin
 
 
 ## Trigonometry
-Here are some functions that I havn't mentioned above because I though they deserve their own category!  
+Here are some functions that I haven'tmentioned above because I though they deserve their own category!  
 
 Being familiar with the [unit circle](https://en.wikipedia.org/wiki/Unit_circle) is a definite plus. The term *sine* and *cosine* may bring bad memories but without those two, hardly anything can rotate! If you want to tilt that mesh around this axis, then *cos* and *sin* are your friends. Knowing their reverse counterpart is also important because some computations give you the *sine* and *cosine* values so that you can find the angle (eg. *dot product*).  
 
@@ -139,6 +139,48 @@ Another important use of planes is to separate other features, just like we cut 
 
 
 ## Linear algebra
+Again, this is a very large family, and we are definitely not going to cover it all, only the most common bits that I am playing with on (almost) a daily basis: vectors and matrices of size *2x2*, *3x3* and *4x4*, in the context of a vector space. This decision is mainly motivated by the fact that such vectors and matrices are used to characterize [affine transformations](https://en.wikipedia.org/wiki/Affine_transformation) such as *translations*, *rotations* and *scalings*.
+
+The brain atlas I am working on is a 3D playground, and the most common type of matrices for [homogeneous transformations](https://en.wikipedia.org/wiki/Transformation_matrix) in a 3D environment are *4x4* matrices. And because of that, vectors (to symbolize a point in space or a translation) are not composed of 3 elements (x, y, and z) but of 4, the last generally being 1. 
+
+Here is a vector that represents a vector:
+
+```       
+      ┌   ┐
+      │ x │
+      │ y │
+  V = │ z │
+      │ 1 │
+      └   ┘
+```
+
+Here is what a *4x4* matrix that represents an homogeneous transformation:
+
+```       
+      ┌                    ┐
+      │ a11  a12  a13  a14 │
+      │ a21  a22  a23  a24 │
+  M = │ a31  a32  a33  a34 │
+      │ a41  a42  a43  a44 │
+      └                    ┘
+```
+
+An important type of matrix to know is the [*identity matrix*](https://en.wikipedia.org/wiki/Identity_matrix). It looks like that:
+
+```       
+      ┌            ┐
+      │ 1  0  0  0 │
+      │ 0  1  0  0 │
+  M = │ 0  0  1  0 │
+      │ 0  0  0  1 │
+      └            ┘
+```
+
+And multiplying a vector by the identity matrix is like multiplying a number by *1*, it does not change anything.
+The product between the identity matrix and a vector results in the same vector. It's like multiplying a number by *1*.
+
+
+
 
 
 dot product, cross product

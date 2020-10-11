@@ -145,7 +145,7 @@ The brain atlas I am working on is a 3D playground, and the most common type of 
 
 Here is a vector that represents a vector:
 
-```       
+```no-highlight
       ┌   ┐
       │ x │
       │ y │
@@ -156,7 +156,7 @@ Here is a vector that represents a vector:
 
 Here is what a *4x4* matrix that represents an homogeneous transformation:
 
-```       
+```no-highlight
       ┌                    ┐
       │ a11  a12  a13  a14 │
       │ a21  a22  a23  a24 │
@@ -167,7 +167,7 @@ Here is what a *4x4* matrix that represents an homogeneous transformation:
 
 An important type of matrix to know is the [*identity matrix*](https://en.wikipedia.org/wiki/Identity_matrix). It looks like that:
 
-```       
+```no-highlight
       ┌            ┐
       │ 1  0  0  0 │
       │ 0  1  0  0 │

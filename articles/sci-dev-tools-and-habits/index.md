@@ -13,10 +13,10 @@ tags:
 
 
 # What kind of situation are we talking about?
-In the [previous article](/jonathanlurie/scientific-developer), I have described roughly what it means to be working as a scientific developer, it was more about the *human aspect* and the soft skills, without getting too technical. Now is the time to get a bit deeper (but still, don't expect any code in this article!).  
+In the [previous article](/jonathanlurie/scientific-developer), I have described roughly what it means to be working as a scientific developer, it was more about the *human aspect* and the soft skills, without getting too technical. Now is the time to get a bit deeper (but still, don't expect any code in this article!). Then, this article can be used as cheat sheet (mainly for all the links) or just as introductory material for a developer who would like to get into scientific software.
 
 The example I am going to use is one of the projects I am currently working on: a brain atlas.  
-One may think *"oh, just a few brain mesh displayed WebGL and you're good to go!"*, and yes, that a part of it, but it's only the tip of the iceberg.  
+One may think *"oh, just a few brain meshes displayed with WebGL and you're good to go!"*, and yes, that's a part of it, but it's only the tip of the iceberg.  
 
 # First, a bit of context
 In the lab I'm working, there are many scientists and researchers. Counting all the staff, plus phd students, the postdocs, the interns, the visiting researchers... it's about 70 maybe. In addition, there are also many developers, with different expertise to sustain the different need the scientists may have (super-computing, machine learning, visualization, database, IT, etc.). Most of the time, we are grouped in small teams of 6 to 12 by topics of expertise, and those teams are generally full-dev or full-scientists with only rare exceptions. This means that scientists and developers are working together because there are collaborations between teams.  
@@ -50,7 +50,7 @@ Then, under the hood, those can be translated like that:
 - connect the dots on our graph database to make sure datasets from different teams can be seen together, in a standardized coordinate system
 - prepare an architecture that scales because new formats and new modalities will hop in later (and we don't know how many)
 
-This involves a fair amount of communication with the scientists and other developers to find the answers to all these questions. Also, some answers are mandatory since the beginning but some can wait. The tricky part is to know that it must be scalable but not really knowing in advance to which point.
+This involves a fair amount of communication with scientists and other developers to find the answers to all these questions. Also, some answers are mandatory since the beginning but some can wait. The tricky part is to know that it must be scalable but not really knowing in advance to which point.
 
 # The fundamentals
 linear algebra, gaussian, Fourier transform, exp/log, triangle, spatial geometry/plane/vector/intersection/aabb, trigonometry, statistics, machine-learning?, sampling, Pythagore/AlQuashi/Thales
@@ -58,6 +58,14 @@ linear algebra, gaussian, Fourier transform, exp/log, triangle, spatial geometry
 I previously said that a scientific developer is *not* a developer who is also a scientist, but maybe I should have said *"who is not a researcher"*, because indeed, we have to know some bits of science. I call those *the fundamentals* because they are for me, and other scientific developers who work less with image processing, visualization and computer graphics may have a very different list of fundamentals. In other words, your mileage may vary, and that's ok to not tick all the following boxes.  
 
 *__Warning:__ I am going to share Wikipedia links and I know Wikipedia math is a bit crazy and overwhelming, but it's just as a reference. Feel free to look up the very same terms on websites that actually care whether or not you understand what you are reading!*
+
+## Types of numbers
+Yes, here we start by the beginning! We've all learned about that, but for most of us, it was a very long time ago. So, to make it short, and because we usually don't need all the categories, there are:
+- the Natural numbers: whole and positive (0, 1, 2, 3, etc.)
+- the Integers: whole, positive or negative
+- the Real numbers: more or less the numbers with a decimal part (that can be 0). I know this is not exactly correct, but for the job, we do not truly make a difference between *rational* or *irrational*
+
+This notion is not to be skipped and we'll see later the relation with encoding and why it matters.
 
 ## Basic math functions
 This may sound trivial for developers that are well versed with the *functional paradigm* but I find very important to bear in mind what a *mathematical function* is: a machine that you feed with a number and turns it into another, reliably. The following functions are building blocks, to assemble and experiment with. The point is not to provide a list of the most complex functions but rather to demonstrate that what appear complex is, most of the time, only multiple simple things put together in a way that we have not figured out yet.
@@ -80,34 +88,63 @@ That's all for the basics, and then you can combine all of them to get one you n
 
 I have noticed that, over the years, a type of function I was using a lot are with [asymptotic behavior](https://en.wikipedia.org/wiki/Asymptotic_analysis?), which is when the input grows, the output grows as well but less and less and eventually become considered constant. Two functions I like, again, these are building block so twist them as you feel, are:
 
-- the [sigmoid](https://en.wikipedia.org/wiki/Sigmoid_function), with this symmetric S-shape and asymptotic behavior on both end (which is not that common). *f(x) = 1 / (1 + exp(-x))*
+- the [sigmoid](https://en.wikipedia.org/wiki/Sigmoid_function), with this symmetric S-shape and asymptotic behavior on both ends (which is not that common). I recently used this one in the brain atlas to make the meshes progressively transparent as the camera is getting closer. *f(x) = 1 / (1 + exp(-x))*
 
-- the i-am-not-aware-it-has-a-name one, but this one is mostly a tweaked inverse function, very handy to grow something rather naturally between 0 and 1, not to slow not too fast. To be used on R+ (aka. positive numbers). *f(x) = 1 / (x + 1)*
+- the *i-am-not-aware-it-has-a-name one*, but this one is mostly a tweaked inverse function, very handy to grow something rather naturally between 0 and 1, not to slow not too fast. To be used on R+ (aka. positive numbers). *f(x) = 1 / (x + 1)*
 
 This list could grow exponentially based on the number of developers contributing to it (ok, maybe not exponentially), but that's already a good start. 
 
 
 ## Trigonometry
-Being familiar with the [unit circle](https://en.wikipedia.org/wiki/Unit_circle) is a definite plus. The term *sine* and *cosine* may bring bad memories but without those two, hardly anything can rotate! If you want to tilt that mesh around this axis, then *cos* and *sin* are your friends. Knowing their reverse counterpart is also important because some computations give you the *sine* and *cosine* value and you must find the angle.  
+Here are some functions that I havn't mentioned above because I though they deserve their own category!  
 
-An important part to remember is all the *radian to degree* conversion. Basically, 1 rad is 180 degrees (half a circle) and it's also Pi.  
+Being familiar with the [unit circle](https://en.wikipedia.org/wiki/Unit_circle) is a definite plus. The term *sine* and *cosine* may bring bad memories but without those two, hardly anything can rotate! If you want to tilt that mesh around this axis, then *cos* and *sin* are your friends. Knowing their reverse counterpart is also important because some computations give you the *sine* and *cosine* values so that you can find the angle (eg. *dot product*).  
 
-If you need to create/draw patterns that have some redundancy or wavy components, then *sine* and *cosine* are probably going to be your friends as they are exactly that: waves, or oscillation, between 0 and 1.
+If you need to create/draw patterns that have some redundancy or wavy components, then *sine* and *cosine* are probably going to be your friends as they are exactly that: waves, or oscillation, between -1 and 1.
 
-If you take the usage of *cos* and *sin* the other way around, you can use it to check whether a list of 2D points that was given to you are in clockwise or counter-clockwise order. This situation is fairly common in computer graphics, where triangles must be described in a strict order to be visible. Wrong direction, and the triangle won't show up!
+The other way around, *cos* and *sin* can be used to check whether a list of 2D points are given in clockwise or counter-clockwise order. This situation is fairly common in computer graphics, where triangles must be described in a strict order to be visible. Wrong direction, and the triangle won't show up! (this is related to the normal of the plane defined by the triangle, but we'll talk about that later)
 
+There are many relations between trigonometry and other topics, it's everywhere and the more I think of it the more I realize everything is somehow related to sine or cosine: [geometry](https://en.wikipedia.org/wiki/List_of_trigonometric_identities), [signal processing](https://en.wikipedia.org/wiki/Fourier_transform), [exponential function](https://en.wikipedia.org/wiki/Euler%27s_formula). I can only advise to scroll though the [Wikipedia page for it](https://en.wikipedia.org/wiki/Trigonometry), even though I am aware there is almost as many links as there words in this article!
 
 
 ## Geometry, in 2D and 3D
+Geometry can be quite complex and the more dimensions you add, the more difficult it is to produce a mental representation of a problem. But, the good thing with geometry is some notions are still rather accessible. Let's start with those!  
+
+Some notions are always the same, no matter how many dimensions we are dealing with:  
+- you need a [coordinate system](https://en.wikipedia.org/wiki/Coordinate_system), most of the time, it's going to be a *Cartesian* one. Basically, an *origin* and as many axes as there are dimensions. Note: axis are always orthogonal to each other in a Cartesian coordinate system (this is why you can't have more axes than dimensions).  
+
+- A *point*. It's the most minimal feature you can get. It's just there floating in your coordinate system
+
+- A *line* is infinite and straight. Because it's infinite, it does not have a point to mark its beginning or its end, though, an infinite amount of points are laying on it. If you know two points on this line, you can [find the equation](https://en.wikipedia.org/wiki/Linear_equation). This equation, *y = ax + b* (Oh! That's the *affine function* definition!) is handy if you need to find the intersection between a ray (or line) and another geometric entity, such as a plane, a sphere, etc.
+
+- a *line segment*, is defined along a line but has a beginning and an end, marked by two points. In other words, it's a line between two points.
+
+- a *triangle*. I suppose everybody knows what a triangle is but just in case: it is a shape composed of 3 points, linked together by line segments. The triangle is the [*simplex*](https://en.wikipedia.org/wiki/Simplex) of the 2D space because its points are all *affinely independent*. In other words, a triangle in a 2D space (or more generally, a simplex in its N-dimensional coordinate system) is exploiting all the dimensions available, no matter how rotated it is. Just like the sine and cosine functions we mentioned above, triangles are everywhere and thousands of theories are based on it. Just scroll the [Wikipedia page](https://en.wikipedia.org/wiki/Triangle) to get a taste of it!
+
+Because triangles are the simplest shape to have a non-null area, they can be used to compose any other geometrical shapes, at least as an estimation. For example, 3D meshes to create all sorts of realistic shapes, are very often composed of thousands of very small triangles.
+
+You have probably learned about some triangle-related theorems in class when you were a teenager, I am thinking mostly of the [intercept theorem of Thales](https://en.wikipedia.org/wiki/Intercept_theorem), [Pythagore](https://en.wikipedia.org/wiki/Pythagorean_theorem) and the lesser-known [Al-Kashi](https://en.wikipedia.org/wiki/Law_of_cosines) (which is a generalization of the Pythagorean theorem that works for non-right triangles). I must admit that those three, are probably the geometric tools I have used the most in my life! They are quite simple to apply, they work in N-dimensional spaces and are incredibly cheap in terms of computation.
+
+- a *bounding box*, and more precisely an [*axis aligned bounding box*](https://en.wikipedia.org/wiki/Minimum_bounding_box#Axis-aligned_minimum_bounding_box) (also called *AABB*). We can see it as a frame (in 2D) or really as a box (in 3D) that delimits a certain area and is generally used as a container of things that we want as small as possible. For example, let's say you have a set of triangles that are grouped because they may represent something together (a player's character in a game) and at some point, you want to know if a line (a laser, a bullet, etc. ) is intersecting it. Then if you intersect the ray with the box, you can very quickly spare yourself with the intersections with all the triangles.
+
+- a *vector*. This seems a bit more abstract than the above but to put it simply, we can see a [vector](https://en.wikipedia.org/wiki/Euclidean_vector) an arrow (the Robin Wood kind of arrow), it has a length, an orientation and a direction (as a bidirectional arrow sounds like a risky device to use!). Just like an arrow, if you move or rotate a vector, it length is not changing. One of the purposes of vectors is to symbolize a direction and in some cases, we don't really need to know how long they are, we just need to know where they are pointing to. Because of that, and also to not alter some computations with a factor other than *1*, we often use [*normal vectors*](https://en.wikipedia.org/wiki/Normal_(geometry)), they are just like regular vectors except they have a length of *1*.
+
+Now that we are ok with the basics of geometry in 2D/3D, we can explore a bit more a very 3D-specific feature: 
+
+- *planes*. In a way, the plane, in 3D, is the equivalent of the line in 2D: it's infinite, does not have a beginning or an end, yet an infinity of points are laying on it, it has an orientation. And just like 2 points are enough to define a 2D (or 3D) line, 3 points are enough to define a plane. In other words, if you have a triangle, you have a plane. But there are other ways to define a plane. The one I like the most is with a point and a [normal vector](https://en.wikipedia.org/wiki/Normal_(geometry)). I find it fairly easy to get a representation of this method. Take a sheet of paper (or cardboard), plant a pencil in the middle, and change the orientation of the whole thing without translating the center point. (yeah, it's actually easier to just do it mentally!). Planes, just like lines, can be represented by a function: *ax + by + cz + d = 0* . Note that there are many ways to [find the plane equation from geometric features and vice-versa](https://en.wikipedia.org/wiki/Plane_(geometry)). It's not always worth remembering them all by heart but it's very handy to know they exist so that you instantly think "I know this, I can find that".
+
+So why such a long part on planes and why do we care so much about this? Again, this is very dependant on they topic you will work on, but more often than not, when you need to do spatial geometry, you need to compute intersections between different kinds of features and for a matter of performance, it is usually faster to compute the intersection with a plane first.   
+
+Another important use of planes is to separate other features, just like we cut a loaf of bread. For example, the space partitioning method called [*bounding volume hierarchy*](https://en.wikipedia.org/wiki/Plane_(geometry)) is using planes to separates the triangles of a mesh more or less equally between its two sides. Then, two bounding boxes are created to encapsulate each part, and are again split by other planes and so on. Just like [*quadtrees*](https://en.wikipedia.org/wiki/Quadtree) and [*octrees*](https://en.wikipedia.org/wiki/Octree), the purpose of a *BVH* is to find ab object in space. But this topic deserves its own article!
 
 
 ## Linear algebra
-Some may think "ouch, starting hard here!", but linear algebra is a big family and we only need a small part of it. For example
+
 
 dot product, cross product
 
 # Machine-related
-(encoding of numbers, string, endianness, color representation, gpu/tesselation, ram/swap, http, chunking/tiling/lod)
+(encoding of numbers, gzip, string, endianness, color representation, gpu/tesselation, ram/swap, http, chunking/tiling/lod)
 
 # File formats
 raw buffers, json, yaml, h5, pickle?, nrrd, tiff, csv

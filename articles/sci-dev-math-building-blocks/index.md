@@ -1,12 +1,12 @@
 ---
-title: "Scientific Developer: My Tools and Habits"
+title: "Scientific Developer: what math do you need?"
 date: 2020-10-06
-excerpt: Here is how I work, the tools I like to use and how I approach a situation as a scientific developer.
+excerpt: A list of fundamentals and mathematics building blocks. And it's gonna be fine.
 cover: bird.jpg
 tags:
   - scientific developer
-  - tools
-  - habits
+  - math
+  - building-blocks
 ---
 
 *You can read the previous article of this series __"What's a Scientific Developer?"__ [here](/jonathanlurie/scientific-developer).*
@@ -52,9 +52,7 @@ Then, under the hood, those can be translated like that:
 
 This involves a fair amount of communication with scientists and other developers to find the answers to all these questions. Also, some answers are mandatory since the beginning but some can wait. The tricky part is to know that it must be scalable but not really knowing in advance to which point.
 
-# The fundamentals
-linear algebra, gaussian, Fourier transform, exp/log, triangle, spatial geometry/plane/vector/intersection/aabb, trigonometry, statistics, machine-learning?, sampling, Pythagore/AlQuashi/Thales
-
+# The fundamentals math things to know
 I previously said that a scientific developer is *not* a developer who is also a scientist, but maybe I should have said *"who is not a researcher"*, because indeed, we have to know some bits of science. I call those *the fundamentals* because they are for me, and other scientific developers who work less with image processing, visualization and computer graphics may have a very different list of fundamentals. In other words, your mileage may vary, and that's ok to not tick all the following boxes.  
 
 *__Warning:__ I am going to share Wikipedia links and I know Wikipedia math is a bit crazy and overwhelming, but it's just as a reference. Feel free to look up the very same terms on websites that actually care whether or not you understand what you are reading!*
@@ -138,62 +136,49 @@ So why such a long part on planes and why do we care so much about this? Again, 
 Another important use of planes is to separate other features, just like we cut a loaf of bread. For example, the space partitioning method called [*bounding volume hierarchy*](https://en.wikipedia.org/wiki/Plane_(geometry)) is using planes to separates the triangles of a mesh more or less equally between its two sides. Then, two bounding boxes are created to encapsulate each part, and are again split by other planes and so on. Just like [*quadtrees*](https://en.wikipedia.org/wiki/Quadtree) and [*octrees*](https://en.wikipedia.org/wiki/Octree), the purpose of a *BVH* is to find ab object in space. But this topic deserves its own article!
 
 
-## Linear algebra
-Again, this is a very large family, and we are definitely not going to cover it all, only the most common bits that I am playing with on (almost) a daily basis: vectors and matrices of size *2x2*, *3x3* and *4x4*, in the context of a vector space. This decision is mainly motivated by the fact that such vectors and matrices are used to characterize [affine transformations](https://en.wikipedia.org/wiki/Affine_transformation) such as *translations*, *rotations* and *scalings*.
+## Linear algebra: matrices and vectors
+Again, this is a very large family, and we are definitely not going to cover it all, only the most common bits that I am playing with on (almost) a daily basis: vectors and matrices of size *2x2*, *3x3* and *4x4*, in the context of a vector space. This decision is mainly motivated by the fact that such vectors and matrices are used to characterize [affine transformations](https://en.wikipedia.org/wiki/Affine_transformation) that a moving points around.
 
-The brain atlas I am working on is a 3D playground, and the most common type of matrices for [homogeneous transformations](https://en.wikipedia.org/wiki/Transformation_matrix) in a 3D environment are *4x4* matrices. And because of that, vectors (to symbolize a point in space or a translation) are not composed of 3 elements (x, y, and z) but of 4, the last generally being 1. 
+The brain atlas I am working on requires a 3D environment, and the most common type of matrices for [homogeneous transformations](https://en.wikipedia.org/wiki/Transformation_matrix) in this case are *4x4* matrices. And because of that, vectors (to symbolize a point in space or a translation) are not composed of 3 elements (x, y, and z) but of 4, the last element is generally 1.
 
-Here is a vector that represents a vector:
+A *4x4* matrix can represent different kinds of transformations:
+- no transformation, this is an identify matrix
+- **translation**, when you move a point of a given distance in a given direction
+- **scaling**, to make elements smaller of bigger by a given factor.
+- **rotation**, to twist things
+- **shearing**, to squeeze things along an axis more than another
 
-```no-highlight
-      ┌   ┐
-      │ x │
-      │ y │
-  V = │ z │
-      │ 1 │
-      └   ┘
-```
+Note that scaling and rotation are effective from the origin. You always rotate things around a point (in 2D) or around an axis (in 3D). For scaling, even though it is less obvious because we have fewer real-life examples of things that we shrink or grow, but imagine you are holding an old inner-tube from your bicycle in your hands, and you pull with your right hand, trying to keep your left hand static. Then the left hand is the origin.
 
-Here is what a *4x4* matrix that represents an homogeneous transformation:
+In terms of optimization, it's good to know that you can multiply matrices together and end up with a single matrix that will represent them all. Then you can just use this one to apply to all the points you need to modify.  
 
-```no-highlight
-      ┌                    ┐
-      │ a11  a12  a13  a14 │
-      │ a21  a22  a23  a24 │
-  M = │ a31  a32  a33  a34 │
-      │ a41  a42  a43  a44 │
-      └                    ┘
-```
+- [*Matrix-vector multiplications*](https://en.wikipedia.org/wiki/Matrix_multiplication). In an Euclidian 3D vector space, you sometimes want to perform this kind of operation to apply a spatial (affine) transform (the **matrix**) to a point in space (the **vector**). Of course, if you need (or want) to multiply an arbitrary matrix with an arbitrary vector and this has nothing to do with anything spatial, no problem, but we have to respect a rule: the vector must have has many rows as the matrix has columns. This kind of operation is applied to individual points.
 
-An important type of matrix to know is the [*identity matrix*](https://en.wikipedia.org/wiki/Identity_matrix). It looks like that:
+- [*Matrix-matrix multiplications*](https://en.wikipedia.org/wiki/Matrix_multiplication). The most common situation is to group transformations in order to end up with a unique matrix that represents the whole transformation. Though, you must be careful with that because the order matters! I find this course material ([part1](http://web.cse.ohio-state.edu/~wang.3602/courses/cse5542-2013-spring/5-TransformationI.pdf) & [part2](http://web.cse.ohio-state.edu/~wang.3602/courses/cse5542-2013-spring/6-Transformation_II.pdf)) from Uni of Ohio very well done on this tricky topic.
 
-```no-highlight
-      ┌            ┐
-      │ 1  0  0  0 │
-      │ 0  1  0  0 │
-  M = │ 0  0  1  0 │
-      │ 0  0  0  1 │
-      └            ┘
-```
+- The *world matrix* may be different for each object in the scene and is the one that transforms a point from its own space into **world space**. This notion is not trivial so let's use an example: you are comfortably sitting on your couch and your bicycle is getting dust in your garage. if we take your own self as a reference for yourself and we take your bicycle as the reference for your bicycle. We can safely say that you are both at the coordinate **(0, 0, 0)** of your respective coordinate systems, and yet, you are not physically on your bicycle. Now if we establish (arbitrarily) that your mailbox is going to be the origin for everything, then your position and the position of your bicycle are different. You will have your own world matrix (your translation from the mailbox), and the bicycle with also have its own world matrix (its translation from the mailbox). Next step, you decide to take you bike for a ride, then you have more or less the same world matrix than your bike, since you are sitting on it, but what about the valve of the front wheel of your bicycle? Is it the same as your bicycle? No, because it's spinning around an axis that is not directly tied to your mailbox (the world reference, remember) but to your bicycle. In other words, the valve has a transformation matrix that is **not** a world matrix. It can be seen as a nested object and such matrix is called a *model matrix*. To find the position of the valve in world space, the valve model matrix must be multiplied by the bike world matrix.
 
-And multiplying a vector by the identity matrix is like multiplying a number by *1*, it does not change anything.
-The product between the identity matrix and a vector results in the same vector. It's like multiplying a number by *1*.
+- [*Dot product*](https://en.wikipedia.org/wiki/Dot_product). This is used for many different things and is highly related to both vectors and *cosine*. In my case, I use dot products exclusively between unit vectors. Why? Because it's a super economical way to check is two vectors are going towards the same direction (dot product equals *1*), towards opposite directions (dot product equals *-1*) of if they cross orthogonally (dot product equals *0*). This may remind you a lot about the kinds of value the unit circle was showing, and this exactly because the dot product between two unit vectors is also the *cosine* or their respective line segments if they were stuck end-to-end. Handy.
+
+- [*Cross product*](https://en.wikipedia.org/wiki/Cross_product). This is sometimes confused with the one above, though those are quite different. Again, I exclusively use the cross product with a pair of vectors that I have normalized (transformed into unit vectors). Then, the result of a cross product is the vector that is orthogonal to the two. We said earlier that a plane in a 3D world could be determined with 3 points (A, B and C, you can draw them on the floor). Now imagine you draw a vector AB and a segment BC, then the cross product *AB x BC* is the vector that is perpendicular to the floor, basically, it's you (from shoes to head). If AB and BC are normalized, then the result is also normalized and is called the **normal vector**. In computer graphics, the normal vector (alongside dot product) is involved in the computation of most light models, one of the simplest being the [Lambertian reflectance](https://en.wikipedia.org/wiki/Lambertian_reflectance).
 
 
+There are plenty of matrix-oriented notions that are good to know, such as the existence of the [*identity matrix*](https://en.wikipedia.org/wiki/Identity_matrix) or that a matrix [determinant](https://en.wikipedia.org/wiki/Determinant) equaling zero means the transformation is invalid and is squishing the whole thing into a lower dimension. There is a [very good video](https://www.youtube.com/watch?v=Ip3X9LOh2dk&vl=en) by [3Blue1Brown](https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw) about this last bit.
+
+## Statistics
+mean, meadian, percentiles, standard dev
+distribution normale / gaussian / loi naturelle
+
+# Sampling
+Nyquist–Shannon
+nearest neighbors
+linear
+cubic
+spline
 
 
-
-dot product, cross product
-
-# Machine-related
-(encoding of numbers, gzip, string, endianness, color representation, gpu/tesselation, ram/swap, http, chunking/tiling/lod)
-
-# File formats
-raw buffers, json, yaml, h5, pickle?, nrrd, tiff, csv
-
-# Languages and libraries
-c py js, notebooks?
-
+# Decompositions and transforms
+frequencies, FFT, wavelet
 
 
 [— @jonathanlurie](https://twitter.com/jonathanlurie)

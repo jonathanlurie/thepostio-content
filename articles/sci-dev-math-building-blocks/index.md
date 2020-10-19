@@ -160,14 +160,41 @@ In terms of optimization, it's good to know that you can multiply matrices toget
 
 - [*Dot product*](https://en.wikipedia.org/wiki/Dot_product). This is used for many different things and is highly related to both vectors and *cosine*. In my case, I use dot products exclusively between unit vectors. Why? Because it's a super economical way to check is two vectors are going towards the same direction (dot product equals *1*), towards opposite directions (dot product equals *-1*) of if they cross orthogonally (dot product equals *0*). This may remind you a lot about the kinds of value the unit circle was showing, and this exactly because the dot product between two unit vectors is also the *cosine* or their respective line segments if they were stuck end-to-end. Handy.
 
-- [*Cross product*](https://en.wikipedia.org/wiki/Cross_product). This is sometimes confused with the one above, though those are quite different. Again, I exclusively use the cross product with a pair of vectors that I have normalized (transformed into unit vectors). Then, the result of a cross product is the vector that is orthogonal to the two. We said earlier that a plane in a 3D world could be determined with 3 points (A, B and C, you can draw them on the floor). Now imagine you draw a vector AB and a segment BC, then the cross product *AB x BC* is the vector that is perpendicular to the floor, basically, it's you (from shoes to head). If AB and BC are normalized, then the result is also normalized and is called the **normal vector**. In computer graphics, the normal vector (alongside dot product) is involved in the computation of most light models, one of the simplest being the [Lambertian reflectance](https://en.wikipedia.org/wiki/Lambertian_reflectance).
-
+- [*Cross product*](https://en.wikipedia.org/wiki/Cross_product). This is sometimes confused with the one above, though those are quite different. Again, I exclusively use the cross product with a pair of vectors that I have normalized (transformed into unit vectors). Then, the result of a cross product is the vector that is orthogonal to the two. We said earlier that a plane in a 3D world could be determined with 3 points (A, B and C, you can draw them on the floor). Now imagine you draw a vector AB and a segment BC, then the cross product *AB x BC* is the vector that is perpendicular to the floor, basically, it's you (from shoes to head). If AB and BC are normalized, then the result is also normalized and is called the **normal vector**. In computer graphics, the normal vector (alongside dot product) is involved in the computation of most light models, one of the simplest being the [Lambertian reflectance](https://en.wikipedia.org/wiki/Lambertian_reflectance).  
 
 There are plenty of matrix-oriented notions that are good to know, such as the existence of the [*identity matrix*](https://en.wikipedia.org/wiki/Identity_matrix) or that a matrix [determinant](https://en.wikipedia.org/wiki/Determinant) equaling zero means the transformation is invalid and is squishing the whole thing into a lower dimension. There is a [very good video](https://www.youtube.com/watch?v=Ip3X9LOh2dk&vl=en) by [3Blue1Brown](https://www.youtube.com/channel/UCYO_jab_esuFRV4b17AJtAw) about this last bit.
 
 ## Statistics
-mean, meadian, percentiles, standard dev
-distribution normale / gaussian / loi naturelle
+We all do at least a bit of statistics in our everyday life, sometimes without knowing it. "Average" or "mean" is generally the first that comes to mind but when we say things such as *"Did I put too much sugar in your coffee?"* or *"It really is too far to walk there, I'd rather take the bus."*, then we are also doing some quick math in our head. What do **too much** and **not enough** even mean? Compared to what? Those notions can quickly become crucial to give insights about a tolerance or a risk.  
+
+### The classics
+- A [*population*](https://en.wikipedia.org/wiki/Statistical_population) is a group of things/entities/people/elements/whatever that we want to study. A population is generally defined by some criteria such as their location, some biological trait, etc. but usually not directly by the variable you want to study. For example, if you want to compute statistics about the wingspan of the bald eagle in a specific region, then you should not add criteria to frame the population such as *"With wingspan above 5 feet"*, otherwise, your study will suffer from a [*samling bias*](https://en.wikipedia.org/wiki/Sampling_bias). It worth mentioning that a **whole population** is often impossible to study because we can only collect data about the whole population very rarely. So what? Well, we'll say we are studying a [*sample*](https://en.wikipedia.org/wiki/Sample_(statistics)) instead. In terms of maths, some formula may vary because of that so pay attention to the **N** being replaced by **(N - 1)** or this kind of trick.
+
+- The population size **N** is the number of things/entities/people/elements/whatever in your study. That's all.
+
+- A thing/entity/person/element/whatever is said [*univariate*](https://en.wikipedia.org/wiki/Univariate) when it has only a single variable to study, or that we want to study only a single variable in it. All the following will be about univariate things.
+
+- The [*mean*](https://en.wikipedia.org/wiki/Mean) (greek letter *μ*, "mu"), and in particular the *arithmetic mean* may sound a bit trivial but it's not a reason to skip it! You can read about the other kinds of *means* as well. Bear in mind that the mean is very affected by [*outliers*](https://en.wikipedia.org/wiki/Outlier), so if you have a mistake in your sample, your mean will suffer from it.
+
+- The [*median*](https://en.wikipedia.org/wiki/Median) is a more robust metric than the mean for a population that may contain outliers. As a result, half of the population will be below the median and half will be above. In case of doubt, prefer the median to the mean.
+
+- The [*percentiles*](https://en.wikipedia.org/wiki/Percentile) are just like the median but instead of looking the value where 50% of the population is below and 50% is above, you will be looking for the value at which 10% is below and 90% is above (the first percentile), then 20% is below and 80% is above, etc. Following the very same logic, *Q1* and *Q3* are the first and third [*percentile*](https://en.wikipedia.org/wiki/Quartile), respectively for 25% and 50% (and the median is then called *Q2*). Sometimes, we like to compare or display the first percentile (10%) with the minimum value and the last percentile (90%) with the maximum value to emphasize on how elongated are the tails of the dataset.
+
+- The [*standard deviation*](https://en.wikipedia.org/wiki/Standard_deviation) (STD or greek letter *σ*, sigma) is one of the most important metrics when it comes to defining a threshold of a range of tolerance (so a upper and a lower threshold). It is always to be used with the *mean*. For example, if your variable follows a *normal distribution* (see below), then a rather safe range of tolerance for what can be considered a "a not-too-crazy-OK value" starts at *mean - A * STD* and ends at *mean + A * STD* and depending on how conservative you are, *A* can be *1*, *2* or *3* (but not more, we'll see later why).
+
+Saying too much about the *standard deviation** without mentioning the concept of [*normal distribution*](https://en.wikipedia.org/wiki/Normal_distribution) is difficult, and yet mentioning "normal distribution" but not "standard deviation" would be kind of stupid, so here we are! From a statistical point of view, being able to plot the Gaussian bell curve is definitely not needed so you don't need to remember the formula. To put it simply, the normal distribution is generally a reliable model to find the probability of a given event that follows somewhat of a natural law, knowing some data in advance. Pretty vague, right? And yet, it's quite powerful and it's used everywhere!
+
+There are two main ways of using a normal distribution:
+1. You know very well your population, you have actual measures and want to extract some insight and meaning
+2. You have no actual measure but a rather good understanding of what you are studying and knowing that your variable follows a normal distribution, you can simulate a synthetic sample
+
+The two parameters of the bell curve are the *mean* (*μ*) and the *standard deviation* (*σ*), you can see it from the fo
+
+
+
+https://www.wikiwand.com/en/Fat-tailed_distribution
+https://www.wikiwand.com/en/Long_tail
+https://en.wikipedia.org/wiki/Median_absolute_deviation
 
 # Sampling
 Nyquist–Shannon
